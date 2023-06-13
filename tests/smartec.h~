@@ -1,0 +1,68 @@
+#ifndef EC_TEST_ENV_H
+#define EC_TEST_ENV_H
+
+#include <stddef.h>
+
+enum coder_type {JERASURE = 0, CONNECTX};
+
+struct hw_coder_ctx {
+  struct ibv_device *device;
+  struct ibv_context *context;
+};
+
+struct sw_coder_ctx {
+
+};
+
+struct coder_options {
+  enum coder_type type;
+  
+  int k;
+  int m;
+  // more general options for encoding/decoding
+};
+
+class ConnectXCoder : public Coder {
+public:
+  ConnectXCoder(coder_options* opts);
+  
+  using Coder::Encode;
+  int Encode(char* src, char** dest, size_t len) override;
+  using Coder::Decode;
+  int Decode(char* src, char** dest, size_t len) override;
+  
+private:
+  struct ibv_device* find_device(const char *devname);
+  void supports_ec(struct ibv_context* context);
+  
+  struct hw_coder_ctx* connectx_ctx_;  
+}
+
+class JErasureCoder : public Coder {
+public:
+  JErasureCoder(coder_options* opts);
+  
+  using Coder::Encode;
+  int Encode(char* src, char* dest, size_t len) override;
+  using Coder::Decode;
+  int Decode(char* src, char* dest, size_t len) override;
+  
+private:
+  struct sw_coder_ctx* connectx_ctx_;  
+}
+
+class Coder {
+ public:
+  virtual int Encode(char* src, char* dest, size_t len) = 0;
+  virtual int Decode(char* src, char* dest, size_t len) = 0;
+
+ private:
+  struct coder_options* opts_;
+};
+
+
+int init_coding_dev(struct coder* dev, struct coder_options* opts, char* name);
+int free_coding_dev(struct coder* dev);
+
+
+#endif // EC_TEST_ENV_H

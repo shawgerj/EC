@@ -16,6 +16,7 @@
  */
 
 #include <string.h>
+#include <infiniband/verbs.h>
 #include <infiniband/verbs_exp.h>
 
 static struct ibv_device *find_device(const char *devname)
@@ -109,6 +110,11 @@ int main(int argc, char *argv[])
 	err = ibv_exp_query_device(context, &dattr);
 	if (err) {
 		printf("Couldn't query device for EC offload caps.\n");
+		if (err == ENOSYS) {
+		  printf("ERROR: Function not implemented.\n");
+		} else if (err == EOPNOTSUPP) {
+		  printf("ERROR: Operation not supported.\n");
+		}
 		goto close_device;
 	}
 

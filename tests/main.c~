@@ -1,0 +1,21 @@
+#include "smartec.h"
+
+int main(int argc, char *argv[])
+{
+  struct coder_options* opts = malloc(sizeof(struct coder_options));
+  opts->k = 4;
+  opts->m = 2;
+  opts->type = CONNECTX;
+
+  ConnectXCoder coder = ConnectXCoder(opts, "mlx5_0");  
+  printf("successfully made the coding device\n");
+
+  if (free_coding_dev(mycoder) != 0) {
+    printf("Error freeing the coding device, exiting...\n");
+    exit(1);
+  }
+
+  printf("All done!\n");
+  return 0;
+}
+

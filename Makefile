@@ -15,7 +15,7 @@ CFLAGS += -g -ggdb -Wall -W -D_GNU_SOURCE
 CC = gcc
 
 #include jerasure path
-INC= -I /usr/include/jerasure
+INC= -I /usr/local/include
 
 TARGETS = mlx_eco_library
 
@@ -23,7 +23,7 @@ all : $(TARGETS)
 
 mlx_eco_library:
 	mkdir $(BUILD_DIR)
-	$(CC) $(CFLAGS) $(INC) -shared -fpic $(LDFLAGS) -o $(BUILD_DIR)$(LIB_NAME) -fPIC $(SRC_DIR)*.c
+	$(CC) $(CFLAGS) $(INC) -o $(BUILD_DIR)$(LIB_NAME) -shared -fpic $(LDFLAGS) -fPIC $(SRC_DIR)*.c
 
 
 install:

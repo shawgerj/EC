@@ -33,7 +33,7 @@
 #include <jerasure.h>
 #include <infiniband/verbs_exp.h>
 
-#define dbg_log                               if (0) printf
+#define dbg_log                               printf
 #define err_log                               printf
 
 #define W 4

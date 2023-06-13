@@ -374,8 +374,14 @@ struct eco_context *mlx_eco_init(void *coder, int k, int m, int use_vandermonde_
 	// query device for EC offload capabilities.
 	memset(&dattr, 0, sizeof(dattr));
 	dattr.comp_mask = IBV_EXP_DEVICE_ATTR_EXP_CAP_FLAGS | IBV_EXP_DEVICE_ATTR_EC_CAPS;
-	if (ibv_exp_query_device(ibv_context, &dattr)) {
+	err = ibv_exp_query_device(ibv_context, &dattr);
+	if (err) {
 		err_log("mlx_eco_init: Couldn't query device for EC offload caps.\n");
+		if (err == ENOSYS) {
+		  err_log("ERROR: Function not implemented.\n");
+		} else if (err == EOPNOTSUPP) {
+		  err_log("ERROR: Operation not supported.\n");
+		}
 		goto query_device_error;
 	}
 
